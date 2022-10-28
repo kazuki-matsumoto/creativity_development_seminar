@@ -21,7 +21,7 @@ def main():
     if ret:
         # ファイル名に日付を指定
         date = datetime.now().strftime("%Y%m%d_%H%M%S")
-        path = "./" + date + ".jpg"
+        path = "./pictures/" + date + ".jpg"
         cv2.imwrite(path, frame)
 
     # 後片付け
