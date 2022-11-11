@@ -41,13 +41,14 @@ while video.isOpened():
             
             print(type(cut_frame))
 
-            plt.imshow(cut_frame[:,:,::-1])
-            plt.show()
+            #plt.imshow(cut_frame[:,:,::-1])
+            #plt.show()
             #print(cut_frame)
 
             result = DeepFace.analyze(cut_frame, actions=['emotion'], enforce_detection=False)
 
-            print(result)
+            print(result)            
+            print([k for k, v in result["emotion"].items() if v == max(result["emotion"].values())])
  
     # フレームの描画
     cv2.imshow('frame', frame)
