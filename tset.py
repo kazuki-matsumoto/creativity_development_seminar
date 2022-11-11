@@ -28,10 +28,9 @@ def fn_voice_recog():
 			print("認識結果: " + recog_text)
 			data = ""
 
-	except KeyboardInterrupt:
-	    print('PROCESS END')
-      client.send("DIE".encode('utf-8'))
-      client.close()
-	    
-if __name__ == '__main__':
-	fn_voice_recog()
+	except:
+		print('PROCESS END')
+		client.send("DIE".encode('utf-8'))
+		client.close()
+
+fn_voice_recog()
