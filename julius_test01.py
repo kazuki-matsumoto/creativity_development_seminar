@@ -40,3 +40,5 @@ except:
     print('PROCESS END')
     client.send("DIE".encode('shift_jis'))
     client.close()
+
+# https://www.matematetea.com/entry/2021/12/02/Python%E3%81%A7Julius%E3%82%92%E5%8B%95%E3%81%8B%E3%81%97%E3%81%A6%E9%9F%B3%E5%A3%B0%E8%AA%8D%E8%AD%98%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E4%BD%9C%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%9F%EF%BC%81
