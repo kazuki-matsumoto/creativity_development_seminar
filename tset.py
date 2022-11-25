@@ -35,4 +35,6 @@ def fn_voice_recog():
 
 fn_voice_recog()
 
+# julius -C main.conf -C am-gmm.conf -module -charconv utf-8 sjis
+
 # https://software-data-mining.com/python%E3%81%A8%E9%9F%B3%E5%A3%B0%E8%AA%8D%E8%AD%98%E3%83%95%E3%83%AA%E3%83%BC%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2julius%E3%81%AE%E9%80%A3%E6%90%BA%E3%81%AB%E3%82%88%E3%82%8B/
