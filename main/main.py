@@ -2,6 +2,44 @@ import cv2
 import os
 from deepface import DeepFace
 import matplotlib.pyplot as plt
+from led import Ws281x
+from rpi_ws281x import Color, PixelStrip
+
+LED_COUNT = 6  # Number of LED pixels.
+LED_PIN = 21  # GPIO pin connected to the pixels (must support PWM!).
+LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
+LED_DMA = 10  # DMA channel to use for generating signal (try 10)
+LED_BRIGHTNESS = 255  # Set to 0 for darkest and 255 for brightest
+LED_INVERT = False  # True to invert the signal (when using NPN transistor level shift)
+LED_CHANNEL = 0
+LED_STATE_OFF = Color(0, 0, 0)  # OFF
+
+
+class Ws281x:
+    def __init__(self):
+        self.__strip = PixelStrip(
+            LED_COUNT,
+            LED_PIN,
+            LED_FREQ_HZ,
+            LED_DMA,
+            LED_INVERT,
+            LED_BRIGHTNESS,
+            LED_CHANNEL,
+        )
+        self.__strip.begin()
+
+    def on(self, red: int, green: int, blue: int) -> None:
+        color = Color(red, green, blue)
+        for i in range(self.__strip.numPixels()):
+            self.__strip.setPixelColor(i, color)
+            self.__strip.show()
+
+    def off(self) -> None:
+        for i in range(self.__strip.numPixels()):
+            self.__strip.setPixelColor(i, LED_STATE_OFF)
+            self.__strip.show()
+
+led = Ws281x()
  
 #動画を読込み
 #カメラ等でストリーム再生の場合は引数に0等のデバイスIDを記述する
@@ -39,7 +77,7 @@ while video.isOpened():
             # 縮小→復元画像で元の画像と置換
             # frame[rect[1]:rect[1]+rect[3],rect[0]:rect[0]+rect[2]]=cut_frame
             
-            print(type(cut_frame))
+            # print(type(cut_frame))
 
             #plt.imshow(cut_frame[:,:,::-1])
             #plt.show()
@@ -47,9 +85,19 @@ while video.isOpened():
 
             result = DeepFace.analyze(cut_frame, actions=['emotion'], enforce_detection=False)
 
-            print(result)            
-            print([k for k, v in result["emotion"].items() if v == max(result["emotion"].values())])
- 
+            print(result)
+            face = [k for k, v in result["emotion"].items() if v == max(result["emotion"].values())][0]
+            print("face :",face)
+            print(type(face))
+            print(face == "neutral")
+            
+            led.off()
+            if face == "neutral":
+                led.on(127, 0, 0)
+            else:
+                led.off()              
+
+
     # フレームの描画
     cv2.imshow('frame', frame)
  
