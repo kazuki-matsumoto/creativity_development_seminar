@@ -33,6 +33,9 @@ def fn_voice_recog():
 		client.send("DIE".encode('utf-8'))
 		client.close()
 
+def julius_output():
+	print("a")
+
 fn_voice_recog()
 
 
