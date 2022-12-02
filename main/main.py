@@ -6,7 +6,7 @@ from deepface import DeepFace
 import matplotlib.pyplot as plt
 from led import Ws281x
 from rpi_ws281x import Color, PixelStrip
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 import subprocess_test, main_julius
 
 
@@ -121,10 +121,14 @@ def say_hello() -> None:
     print("hello!!!")   
 
 
+def main():
+    with ProcessPoolExecutor(max_workers = 3) as executor:
+        executor.submit(faceReco)
+        executor.submit(say_hello)
+        executor.submit(main_julius.fn_voice_recog)
+
+
 #faceReco()
 
 if __name__ == "__main__":
-    with ProcessPoolExecutor(max_workers = 2) as executor:
-        executor.submit(faceReco)
-        executor.submit(say_hello)
-        executor.submit(main_julius)
+    main()
