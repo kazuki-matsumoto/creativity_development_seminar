@@ -1,3 +1,5 @@
+import sys
+sys.path.append("/home/sozo/julius/julius-kit")
 import cv2
 import os
 from deepface import DeepFace
@@ -5,6 +7,7 @@ import matplotlib.pyplot as plt
 from led import Ws281x
 from rpi_ws281x import Color, PixelStrip
 from concurrent.futures import ProcessPoolExecutor
+import subprocess_test, main_julius
 
 
 LED_COUNT = 6  # Number of LED pixels.
@@ -124,3 +127,4 @@ if __name__ == "__main__":
     with ProcessPoolExecutor(max_workers = 2) as executor:
         executor.submit(faceReco)
         executor.submit(say_hello)
+        executor.submit(main_julius)
