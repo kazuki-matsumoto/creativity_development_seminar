@@ -1,8 +1,44 @@
-
 import socket
 import re
 import time
+from led import Ws281x
+from rpi_ws281x import Color, PixelStrip
 
+LED_COUNT = 6  # Number of LED pixels.
+LED_PIN = 21  # GPIO pin connected to the pixels (must support PWM!).
+LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
+LED_DMA = 10  # DMA channel to use for generating signal (try 10)
+LED_BRIGHTNESS = 255  # Set to 0 for darkest and 255 for brightest
+LED_INVERT = False  # True to invert the signal (when using NPN transistor level shift)
+LED_CHANNEL = 0
+LED_STATE_OFF = Color(0, 0, 0)  # OFF
+
+
+class Ws281x:
+    def __init__(self):
+        self.__strip = PixelStrip(
+            LED_COUNT,
+            LED_PIN,
+            LED_FREQ_HZ,
+            LED_DMA,
+            LED_INVERT,
+            LED_BRIGHTNESS,
+            LED_CHANNEL,
+        )
+        self.__strip.begin()
+
+    def on(self, red: int, green: int, blue: int) -> None:
+        color = Color(red, green, blue)
+        for i in range(self.__strip.numPixels()):
+            self.__strip.setPixelColor(i, color)
+            self.__strip.show()
+
+    def off(self) -> None:
+        for i in range(self.__strip.numPixels()):
+            self.__strip.setPixelColor(i, LED_STATE_OFF)
+            self.__strip.show()
+
+led = Ws281x()
 
 def fn_voice_recog():
 	host = '127.0.0.1'   # IPアドレス
@@ -26,6 +62,13 @@ def fn_voice_recog():
 				recog_text += word
 					
 			print("認識結果: " + recog_text)
+
+			led.off()
+			if recog_text == "スイッチオン。":
+					led.on(0, 127, 0)
+			elif recog_text == "スイッチオフ。":
+					led.off()
+
 			data = ""
 
 	except:
@@ -33,11 +76,7 @@ def fn_voice_recog():
 		client.send("DIE".encode('utf-8'))
 		client.close()
 
-def julius_output():
-	print("a")
-
 fn_voice_recog()
-
 
 # julius -C main.conf -C am-gmm.conf -module -charconv utf-8 sjis
 

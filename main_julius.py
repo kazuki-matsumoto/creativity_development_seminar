@@ -78,6 +78,7 @@ def fn_voice_recog():
 
 fn_voice_recog()
 
+
 # コマンドラインで実行
 # julius -C main.conf -C am-gmm.conf -module -charconv utf-8 sjis
 
