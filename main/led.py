@@ -1,5 +1,6 @@
 from rpi_ws281x import Color, PixelStrip
 import time
+import sys
 
 LED_COUNT = 6  # Number of LED pixels.
 LED_PIN = 21  # GPIO pin connected to the pixels (must support PWM!).
@@ -36,6 +37,10 @@ class Ws281x:
             self.__strip.show()
 
 led = Ws281x()
-led.on(127, 0, 0)
+led.off()
+led.on(127, 127, 127)
 time.sleep(3)
 led.off()
+time.sleep(3)
+led.on(127, 127, 127)
+time.sleep(3)

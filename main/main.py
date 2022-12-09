@@ -8,7 +8,8 @@ from led import Ws281x
 from rpi_ws281x import Color, PixelStrip
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 import subprocess_test, main_julius
-
+import time
+import threading
 
 LED_COUNT = 6  # Number of LED pixels.
 LED_PIN = 21  # GPIO pin connected to the pixels (must support PWM!).
@@ -38,16 +39,18 @@ class Ws281x:
         for i in range(self.__strip.numPixels()):
             self.__strip.setPixelColor(i, color)
             self.__strip.show()
+        return True
 
     def off(self) -> None:
         for i in range(self.__strip.numPixels()):
             self.__strip.setPixelColor(i, LED_STATE_OFF)
             self.__strip.show()
+        return False
 
 
 def faceReco() -> None:
     led = Ws281x()
-     
+    #led.off()
     #動画を読込み
     #カメラ等でストリーム再生の場合は引数に0等のデバイスIDを記述する
     video = cv2.VideoCapture(0)
@@ -95,18 +98,42 @@ def faceReco() -> None:
                 print(result)
                 face = [k for k, v in result["emotion"].items() if v == max(result["emotion"].values())][0]
                 print("face :",face)
-                print(type(face))
-                print(face == "neutral")
-                
-                led.off()
-                if face == "neutral":
-                    led.on(127, 0, 0)
-                else:
-                    led.off()              
+                #print(type(face))
+                #print(face == "neutral")
+                #fn_voice_ = main_julius.fn_voice_recog()
+                print("output_flag",main_julius.flag)
+                if main_julius.flag == 1:
+                    if face == "neutral":
+                        led.on(127, 0, 0)
+                    if face == "angry":
+                        led.on(127, 0, 0)
+                    if face == "happy":
+                        led.on(127, 0, 127)
+                    else:
+                        led.on(127, 127, 127)
 
 
         # フレームの描画
         cv2.imshow('frame', frame)
+        
+        #led.off()
+        #if face == "neutral":
+        #    led.on(127, 0, 0)
+        #if face == "angry":
+        #    led.on(127, 0, 0)
+        #    #time.sleep(5)
+        #    #led.off()
+        #if face == "happy":
+        #    led.on(0, 127, 0)
+        #    #time.sleep(5)
+        #    #led.off()
+        #if face == "surprise":
+        #    led.on(0, 127, 0)
+        #    #time.sleep(5)
+        #    #led.off()
+        #else:
+        #    led.on(127, 127, 127)
+     
      
         # qキーの押下で処理を中止
         key = cv2.waitKey(1) & 0xFF
@@ -120,15 +147,29 @@ def faceReco() -> None:
 def say_hello() -> None:
     print("hello!!!")   
 
+def voice_reco():
+    main_julius.fn_voice_recog()
 
 def main():
     with ProcessPoolExecutor(max_workers = 3) as executor:
+        #led.off()
         executor.submit(faceReco)
         executor.submit(say_hello)
         executor.submit(main_julius.fn_voice_recog)
 
-
 #faceReco()
 
 if __name__ == "__main__":
-    main()
+    #time.sleep(3)
+    #faceReco()
+    thread_1 = threading.Thread(target=faceReco)
+    #fn_voice_ = main_julius.fn_voice_recog()
+    thread_2 = threading.Thread(target=main_julius.fn_voice_recog)
+    #main()
+    thread_1.start()
+    thread_2.start()
+    
+    #led = Ws281x()
+    #led.off()
+    
+    #led.off()
