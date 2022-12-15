@@ -1,4 +1,4 @@
-import sr_test as sr
+import speech_recognition as sr
 
 r = sr.Recognizer()
 mic = sr.Microphone()
